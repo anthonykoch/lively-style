@@ -1,0 +1,29 @@
+{
+  "private": true,
+  "name": "lively-style",
+  "version": "1.0.0",
+  "description": "Lively pre-processor live feedback",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava test/*.test.js --serial",
+    "test:watch": "yarn run test --watch"
+  },
+  "author": "Anthony Koch",
+  "license": "MIT",
+  "@std/esm": "cjs",
+  "ava": {
+    "require": [
+      "@std/esm"
+    ]
+  },
+  "dependencies": {
+    "gonzales-pe": "4.2.3",
+    "node-sass": "4.7.2"
+  },
+  "devDependencies": {
+    "@std/esm": "0.22.0",
+    "ava": "0.25.0",
+    "eslint": "4.18.0",
+    "sinon": "^4.4.1"
+  }
+}
