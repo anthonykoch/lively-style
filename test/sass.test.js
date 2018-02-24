@@ -23,27 +23,27 @@ const types = sass.types;
 test('run() - accepts only valid arguments', t => {
   t.throws(() => run(), /options\.data, got undefined/);
   t.throws(() => run({ data: '' }), /options\.data, got $/, 'empty data throws');
-  t.throws(() => run({ data: '.hello {}' }), /options\.rootdir, got undefined/i, 'undefined rootdir');
+  t.throws(() => run({ data: '.hello {}' }), /options\.cwd, got undefined/i, 'undefined cwd');
   t.throws(
-      () => run({ data: '.hello {}', rootdir: 'sass/' }),
-      /options\.rootdir should be absolute, got undefined/i,
-      'non-absolute rootdir'
+      () => run({ data: '.hello {}', cwd: 'sass/' }),
+      /options\.cwd should be absolute, got sass\//i,
+      'non-absolute cwd'
     );
 
   t.throws(
-      () => run({ data: '.hello {}', rootdir: '/' }),
+      () => run({ data: '.hello {}', cwd: '/' }),
       /\{string\(min:1\)\} options\.filename, got undefined/i,
       'filename undefiend'
     );
 
   t.throws(
-      () => run({ data: '.hello {}', rootdir: '/', filename: '/' }),
+      () => run({ data: '.hello {}', cwd: '/', filename: '/' }),
       /options\.filename should be a file path/,
       'filename with basename'
     );
 
   t.notThrows(
-      () => run({ data: '.hello {}', rootdir: '/', filename: '/hello.scss' }),
+      () => run({ data: '.hello {}', cwd: '/', filename: '/hello.scss' }),
       'all valid args'
     );
 });
@@ -69,7 +69,7 @@ $breakpoints: $breakpoint-small;
     const { documents } = run({
       data,
       filename: FILENAME,
-      rootdir: '/src/sass',
+      cwd: '/src/sass',
       events
     });
 
@@ -96,7 +96,7 @@ $breakpoints: $breakpoint-small;
 //     const { documents } = run({
 //       data,
 //       filename: '/src/sass/main.scss',
-//       rootdir: '/src/sass',
+//       cwd: '/src/sass',
 //       events
 //     });
 
@@ -128,7 +128,7 @@ $breakpoint-small: hello;
     const { documents } = run({
       data,
       filename: '/src/sass/main.scss',
-      rootdir: '/src/sass',
+      cwd: '/src/sass',
     });
 
     t.is(documents[0].items.length, 0);
@@ -187,21 +187,21 @@ test('transforms imported files', t => {
     { filename: FILE_BUTTON, title: 'absolute import' },
     { filename: 'button.scss', title: 'relative entry import' },
     { filename: '_button.scss', title: 'relative partial import' },
-  ].forEach(() => {
+  ].forEach(({ filename, title }) => {
     t.notThrows(() => {
       const options = {
         data: `${CONTENT_MAIN}\n@import "${FILE_BUTTON}";`,
-        rootdir: DIR_SASS,
+        cwd: DIR_SASS,
         filename: FILE_MAIN,
       };
 
       const { documents } = run({
         data: options.data,
         filename: options.filename,
-        rootdir: options.rootdir,
+        cwd: options.cwd,
       });
 
-      t.deepEqual(documents, expected, 'absolute import');
+      t.deepEqual(documents, expected, title);
     });
   });
 });

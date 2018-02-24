@@ -562,32 +562,28 @@ const getSassPartialPermutations = filename => {
  *
  * @param  {String} options.data      - The data to be run
  * @param  {String} options.filename  - The filename associated with the data, required
- * @param  {Object} options.functions - Callbacks for certain events
  * @param  {Object} options.cwd       - An absolute path, used to turn relative include path into absolute paths
  * @return {Object}
  */
 export const run = ({
     data,
     includePaths: userIncludePaths=[],
-    functions={},
     filename,
-    rootdir,
+    cwd,
     events
   }={}) => {
   assert(isNonEmptyString(data), `{String(min:1)} options.data, got ${data}`);
-  assert(isNonEmptyString(rootdir), `{String(min:1)} options.rootdir, got ${rootdir}`);
-  assert(path.isAbsolute(rootdir), `options.rootdir should be absolute, got ${filename}`);
+  assert(isNonEmptyString(cwd), `{String(min:1)} options.cwd, got ${cwd}`);
+  assert(path.isAbsolute(cwd), `options.cwd should be absolute, got ${cwd}`);
   assert(isNonEmptyString(filename), `{String(min:1)} options.filename, got ${filename}`);
   assert(path.isAbsolute(filename), `options.filename should be absolute, got ${filename}`);
   assert(path.basename(filename).length > 0, `options.filename should be a file path, got ${filename}`);
   assert(Array.isArray(userIncludePaths), `{array} options.includePaths, got ${userIncludePaths}`);
 
-  const contextDir = path.dirname(filename);
-
-  const includePaths = [contextDir, ...userIncludePaths];
+  const basedir = path.dirname(filename);
+  const includePaths = [basedir, ...userIncludePaths];
 
   const { output } = transform(data, {
-    functions,
     filename,
   });
 
@@ -606,7 +602,7 @@ export const run = ({
     data: sassInput,
     includePaths,
     importer(url) {
-      const filenames = getSassFilePermutations(url, includePaths, contextDir);
+      const filenames = getSassFilePermutations(url, includePaths, cwd);
       const file = getFirstExistantFile(filenames);
 
       if (file == null) {
