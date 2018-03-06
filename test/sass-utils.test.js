@@ -3,7 +3,7 @@ import test from 'ava';
 import {
   getSassFilePermutations,
   getSassExtensionPermutations,
-} from '../sass';
+} from '../lib/sass';
 
 test('getSassExtensionPermutations()', t => {
   t.deepEqual(

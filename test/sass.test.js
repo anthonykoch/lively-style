@@ -8,7 +8,7 @@ import sass from 'node-sass';
 import {
   run,
   serialize,
-} from '../sass';
+} from '../lib/sass';
 
 import {
   DIR_SASS,
